@@ -9,10 +9,23 @@ Core Actions: add a pet, schedule a walk, see today's tasks
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
 
+The system uses four classes: `Task`, `Pet`, `Owner`, and `Scheduler`.
+
+- `Task` holds the details of a single care activity — title, duration, priority, category, and preferred time of day.
+- `Pet` represents the animal being cared for. It stores basic info (name, species, age, special needs) and is responsible for completing tasks.
+- `Owner` represents the person managing care. It stores their name, available time, and preferred start time. It owns one `Pet` and is responsible for creating tasks.
+- `Scheduler` takes an `Owner` (and accesses the pet through them) and manages the task list. It is responsible for building the daily schedule and summarizing the plan.
+
 **b. Design changes**
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
+
+Yes, three small changes were made after reviewing the skeleton:
+
+- Added `completed: bool = False` to `Task`. The original design had no way to track whether a task was done, which made `Pet.complete_task()` meaningless.
+- Implemented `Pet.complete_task()` to set `task.completed = True`. It was the only method with an obvious one-line body and needed to be wired up for the completed state to work.
+- Added `category` and `preferred_time` to `Owner.create_task()`. The original signature was missing these fields, so it couldn't fully construct a valid `Task` object.
 
 ---
 
