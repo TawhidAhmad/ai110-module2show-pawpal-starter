@@ -36,10 +36,14 @@ Yes, three small changes were made after reviewing the skeleton:
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
 - How did you decide which constraints mattered most?
 
+The scheduler considers three constraints: available time (tasks are skipped once `remaining_minutes` runs out), priority (high → medium → low), and preferred time of day (morning / afternoon / evening slot boundaries). Time budget came first because a plan that overruns the owner's day is useless. Priority came second because missing a medication is worse than missing a grooming session. Preferred time was third — a soft preference that improves realism without being a hard rule.
+
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
+
+The scheduler sorts by time slot before priority, so a low-priority morning task is placed before a high-priority evening task. This trades strict priority ordering for a more natural daily flow. For a pet owner, doing things at the right time of day (feeding in the morning, walks before dinner) matters more than a rigid global ranking — a high-priority evening task doesn't need to happen at 8 AM just because it ranks highest.
 
 ---
 

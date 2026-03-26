@@ -32,6 +32,18 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+## Smarter Scheduling
+
+Four features in `pawpal_system.py` make the scheduler more useful than a basic priority list:
+
+`sort_by_time()` orders tasks chronologically using a lambda key on zero-padded `"HH:MM"` slot-start strings, so no `datetime` parsing is needed.
+
+`filter_tasks(pet_name, status)` accepts either or both parameters to quickly narrow down pending or completed tasks per pet.
+
+`complete_task()` auto-creates the next occurrence on completion: `timedelta(days=1)` for daily tasks, `timedelta(weeks=1)` for weekly. `"as-needed"` tasks produce no successor.
+
+`detect_conflicts()` checks every pair of scheduled entries using `A.start < B.end AND B.start < A.end`, returning warning strings without raising exceptions.
+
 ### Suggested workflow
 
 1. Read the scenario carefully and identify requirements and edge cases.
