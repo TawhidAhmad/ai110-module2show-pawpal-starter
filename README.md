@@ -44,6 +44,23 @@ Four features in `pawpal_system.py` make the scheduler more useful than a basic 
 
 `detect_conflicts()` checks every pair of scheduled entries using `A.start < B.end AND B.start < A.end`, returning warning strings without raising exceptions.
 
+## Testing PawPal+
+
+Run the full test suite with:
+
+```bash
+python -m pytest tests/test_pawpal.py -v
+```
+
+The suite covers three areas:
+
+- Sorting correctness tasks are returned in chronological order (morning → afternoon → evening → unslotted), with high-priority tasks winning ties within the same slot.
+- Recurrence logic
+completing a daily task creates a new instance due the next day; weekly tasks advance by seven days; `as-needed` tasks produce no successor.
+- Conflict detection overlapping time blocks are flagged, adjacent tasks are not, and skipped tasks are excluded from checks.
+
+Confidence Level: 5 stars
+
 ### Suggested workflow
 
 1. Read the scenario carefully and identify requirements and edge cases.
