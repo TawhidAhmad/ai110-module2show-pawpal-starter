@@ -32,6 +32,17 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+## Features
+
+- Sorting by time slot tasks are ordered morning → afternoon → evening using lexicographic comparison on zero-padded `"HH:MM"` slot-start strings; no `datetime` parsing needed.
+- Priority tiebreaking within the same time slot, high-priority tasks always schedule before medium or low.
+- Conflict warnings every pair of scheduled entries is checked with `A.start < B.end AND B.start < A.end`; overlapping tasks surface as warnings without crashing the scheduler.
+- Task filtering filter by pet name, completion status (pending/completed), or both at once.
+- Daily recurrence completing a task auto-generates the next occurrence: +1 day for daily, +7 days for weekly; `as-needed` tasks produce no successor.
+- Recurring task summary pending tasks are grouped by frequency (daily / weekly / as-needed) for a quick overview.
+- Pin-time scheduling tasks can be anchored to an exact clock time (e.g. a vet appointment at `09:30`), independent of the sequential time budget.
+- Time budget tracking tasks that exceed the owner's remaining available minutes are skipped and reported separately.
+
 ## Smarter Scheduling
 
 Four features in `pawpal_system.py` make the scheduler more useful than a basic priority list:

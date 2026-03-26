@@ -54,10 +54,14 @@ The scheduler sorts by time slot before priority, so a low-priority morning task
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
 - What kinds of prompts or questions were most helpful?
 
+Copilot's `#codebase` chat was most effective for cross-file reasoning — asking "how does Scheduler access tasks?" surfaced the Owner → Pet → Task chain instantly without manually tracing imports. Inline completions were useful for filling out `to_dict()` and the sort lambda once the pattern was established. Using separate chat sessions per phase (design, logic, UI) kept context focused so Copilot didn't confuse UML intent with implementation details.
+
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
 - How did you evaluate or verify what the AI suggested?
+
+Copilot suggested storing a flat `List[Task]` directly on `Scheduler`, matching the initial UML, but I rejected it because tasks logically belong to a `Pet` — the scheduler should only read, not own. I verified by checking that every method (`filter_tasks`, `detect_conflicts`) only needed read access through `owner.pets`, confirming no write path required Scheduler to hold state.
 
 ---
 
@@ -68,10 +72,14 @@ The scheduler sorts by time slot before priority, so a low-priority morning task
 - What behaviors did you test?
 - Why were these tests important?
 
+I tested sorting correctness (morning before afternoon before evening, with priority tiebreaking), recurrence logic (daily +1 day, weekly +7 days, as-needed no successor), and conflict detection (overlapping intervals flagged, adjacent ones not). These were the three algorithms most likely to have off-by-one or ordering bugs that would silently produce a wrong schedule.
+
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
 - What edge cases would you test next if you had more time?
+
+Confidence is high for the tested paths, but edge cases remain around pin-time tasks that overlap the owner's start time and tasks where `preferred_time` is `None` mixed with slotted tasks. Next I'd test a schedule where pinned and sequential tasks collide at the boundary to confirm `detect_conflicts` catches it and `build_schedule` still returns a valid result.
 
 ---
 
@@ -81,10 +89,16 @@ The scheduler sorts by time slot before priority, so a low-priority morning task
 
 - What part of this project are you most satisfied with?
 
+Satisfied with the entire project but mainly the moment for Copilot Agent Mode as well as polishing by reflection.md and readme.md files.
+
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
 
+Improve my starting UML so that it included more tasks so not as much changes down the line.
+
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+The importance of always testing and creating tests in between big feature additions. 
